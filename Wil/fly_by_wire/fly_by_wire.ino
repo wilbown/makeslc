@@ -25,12 +25,12 @@ void setup() {
   
   Serial.println(rmax);
   
-  float r1 = sqrt(sq(rx1-x)+sq(ry1-y)+sq(z));
-  Serial.println(r1);
-  float r2 = sqrt(sq(rx2-x)+sq(ry2-y)+sq(z));
-  Serial.println(r2);
-  float r3 = sqrt(sq(rx3-x)+sq(ry3-y)+sq(z));
-  Serial.println(r3);
+  //float r1 = sqrt(sq(rx1-x)+sq(ry1-y)+sq(z));
+  //Serial.println(r1);
+  //float r2 = sqrt(sq(rx2-x)+sq(ry2-y)+sq(z));
+  //Serial.println(r2);
+  //float r3 = sqrt(sq(rx3-x)+sq(ry3-y)+sq(z));
+  //Serial.println(r3);
   
   s1.attach(9);
   s2.attach(10);
@@ -39,20 +39,29 @@ void setup() {
 }
 
 void loop() {
-  potx = analogRead(1);            // LF/RT reads the value of the potentiometer (value between 0 and 1023)
+  //potx = analogRead(1);            // LF/RT reads the value of the potentiometer (value between 0 and 1023)
   //potx = map(potx, 0, 1023, 0, 179);     // scale it to use it with the servo (value between 0 and 180)
   
   potx = analogRead(1);            // LF/RT
   poty = analogRead(0);            // UP/DN
   
   
+  float rmax_ =
+    sqrt(sq(rx1-x) + sq(ry1-y)) +
+    sqrt(sq(rx2-x) + sq(ry2-y)) +
+    sqrt(sq(rx3-x) + sq(ry3-y))
+    ;
+  if (rmax_ > rmax) {
+    Serial.println(rmax);
+  }
+  
   float r1 = sqrt(sq(rx1-x)+sq(ry1-y)+sq(z));
   float r2 = sqrt(sq(rx2-x)+sq(ry2-y)+sq(z));
   float r3 = sqrt(sq(rx3-x)+sq(ry3-y)+sq(z));
   
   
-  s1.write(map(r1, 0, 1023, 0, 179));                  // sets the servo position according to the scaled value
-  s2.write(map(r2, 0, 1023, 0, 179));
-  s3.write(map(r3, 0, 1023, 0, 179));
+  s1.write(map(r1, 0, 1023, 0, 359));                  // sets the servo position according to the scaled value
+  s2.write(map(r2, 0, 1023, 0, 359));
+  s3.write(map(r3, 0, 1023, 0, 359));
   delay(15);                           // waits for the servo to get there
 }
