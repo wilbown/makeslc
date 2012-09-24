@@ -5,9 +5,9 @@
 
 Servo s1,s2,s3;
 
-float rx1 = -2; float ry1 = 2;
-float rx2 = 2; float ry2 = 1.5;
-float rx3 = 0; float ry3 = 4;
+float rx1 = -50; float ry1 = 50;
+float rx2 = 50; float ry2 = 75;
+float rx3 = 0; float ry3 = 100;
 float rmax =
   sqrt(sq(rx1) + sq(ry1)) +
   sqrt(sq(rx2) + sq(ry2)) +
@@ -43,8 +43,21 @@ void loop() {
   //potx = map(potx, 0, 1023, 0, 179);     // scale it to use it with the servo (value between 0 and 180)
   
   potx = analogRead(1);            // LF/RT
+  potx = map(potx, 0, 1023, -2, 3);
   poty = analogRead(0);            // UP/DN
+  poty = map(poty, 0, 1023, -2, 3);
   
+  
+  //Serial.println(potx);
+  //Serial.println(poty);
+  //Serial.println("");
+  
+  x += potx;
+  y += poty;
+  
+  //Serial.println(x);
+  //Serial.println(y);
+  //Serial.println("");
   
   float rmax_ =
     sqrt(sq(rx1-x) + sq(ry1-y)) +
@@ -52,16 +65,24 @@ void loop() {
     sqrt(sq(rx3-x) + sq(ry3-y))
     ;
   if (rmax_ > rmax) {
-    Serial.println(rmax);
+    //Serial.println(rmax);
+    x = 0;
+    y = 0;
+    return;
   }
   
-  float r1 = sqrt(sq(rx1-x)+sq(ry1-y)+sq(z));
-  float r2 = sqrt(sq(rx2-x)+sq(ry2-y)+sq(z));
-  float r3 = sqrt(sq(rx3-x)+sq(ry3-y)+sq(z));
+  int r1 = sqrt(sq(rx1-x)+sq(ry1-y)+sq(z));
+  int r2 = sqrt(sq(rx2-x)+sq(ry2-y)+sq(z));
+  int r3 = sqrt(sq(rx3-x)+sq(ry3-y)+sq(z));
+  
+  Serial.println(r1);
+  Serial.println(r2);
+  Serial.println(r3);
+  Serial.println("");
   
   
-  s1.write(map(r1, 0, 1023, 0, 359));                  // sets the servo position according to the scaled value
-  s2.write(map(r2, 0, 1023, 0, 359));
-  s3.write(map(r3, 0, 1023, 0, 359));
+  s1.write(map(r1, 0, 180, 0, 179));                  // sets the servo position according to the scaled value
+  s2.write(map(r2, 0, 180, 0, 179));
+  s3.write(map(r3, 0, 180, 0, 179));
   delay(15);                           // waits for the servo to get there
 }
